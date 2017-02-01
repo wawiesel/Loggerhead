@@ -72,7 +72,7 @@ list below. It is expected to find a *.in file for each, e.g.
 
 external/Testing123.in
 ------------------------------------------------------------------------------
-This file is configured and then treated like it's own
+This file is configured and then treated like its own
 CMakeLists.txt file to drive the download using only
 CMake and the awesome ``ExternalProject_Add`` command.
 
