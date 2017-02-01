@@ -1,9 +1,14 @@
 Template123
 ===========
 
-This is a template for projects which use
+This is a template for projects which use Testing123 for unit testing. 
 
-   Testing123 --> BootsOnTheGround --> TriBITS --> CMake
+::
+
+   -->Testing123
+      -->BootsOnTheGround
+         -->TriBITS
+            -->CMake
 
 Yes, it is a deep heirarchy.
 
@@ -17,6 +22,9 @@ Let's go through the project in the order it is processed by CMake [*]_.
 
 File Tree
 ---------
+
+::
+
     .
     ├── CMakeLists.txt
     ├── LICENSE
