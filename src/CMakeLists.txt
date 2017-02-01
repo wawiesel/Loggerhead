@@ -1,17 +1,24 @@
-#Do this at the beginning of a package CMakeList.txt file.
+##
+##
+##src/CMakeLists.txt
+##------------------------------------------------------------------------------
+##This is a standard **package** CMakeLists.txt file describing
+##the code. Below I build an executable and declare a test
+##directory. You can also build a library with ``TRIBITS_ADD_LIBRARY``.
+##
+##.. code-block:: cmake
+##
+
+#Do this at the beginning of a package.
 TRIBITS_PACKAGE( Template123 )
 
-#The middle is up to you!
-
-#Here I add a test directory
 TRIBITS_ADD_TEST_DIRECTORIES( test )
 
-#and an executable.
 TRIBITS_ADD_EXECUTABLE( demo
   NOEXEPREFIX
   SOURCES
     demo.cc
 )
 
-#Then I finish it off with this.
+#Do this at the end.
 TRIBITS_PACKAGE_POSTPROCESS()

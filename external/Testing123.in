@@ -1,3 +1,13 @@
+##
+##
+##external/Testing123.in
+##------------------------------------------------------------------------------
+##This file is configured and then treated like it's own
+##CMakeLists.txt file to drive the download using only
+##CMake and the awesome ``ExternalProject_Add`` command.
+##
+##.. code-block:: cmake
+##
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
 PROJECT(download-external-Testing123 NONE)
 

@@ -1,5 +1,14 @@
+##
+##
+##CMakeLists.txt
+##------------------------------------------------------------------------------
+##This is the main CMakeLists.txt file.
+##
+##.. code-block:: cmake
+##
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
 
+# First download external repositories.
 ADD_SUBDIRECTORY( external )
 
 # This sets BOTG_SOURCE_DIR which may be used later.
