@@ -15,6 +15,30 @@ Yes, it is a deep heirarchy.
 
 Let's go through the project in the order it is processed by CMake [*]_.
 
+File Tree
+---------
+    .
+    ├── CMakeLists.txt
+    ├── LICENSE
+    ├── PackagesList.cmake
+    ├── ProjectName.cmake
+    ├── README.rst
+    ├── TPLsList.cmake
+    ├── Version.cmake
+    ├── external
+    │   ├── CMakeLists.txt
+    │   └── Testing123.in
+    └── src
+        ├── CMakeLists.txt
+        ├── cmake
+        │   └── Dependencies.cmake
+        ├── demo.cc
+        └── test
+            ├── CMakeLists.txt
+            ├── tstDemo.cc
+            └── tstDemo.f90
+
+
 CMakeLists.txt
 ------------------------------------------------------------------------------
 This is the main CMakeLists.txt file.
