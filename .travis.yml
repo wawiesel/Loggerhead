@@ -1,0 +1,52 @@
+sudo: required
+
+dist: trusty
+
+language: cpp
+
+os:
+    - linux
+
+compiler:
+    - gcc
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - openssl
+            - libssl-dev
+            - libcurl4-openssl-dev
+            - cmake
+            - cmake-data
+            - gcc-4.9
+            - g++-4.9
+            - gfortran-4.9
+
+before_install:
+    - export FC="gfortran-4.9";
+      if [[ "$CXX" == "g++" ]]; then
+          export CXX="g++-4.9";
+          export CC="gcc-4.9";
+      fi;
+
+install:
+    - echo ${PATH}
+    - echo ${CC}
+    - echo ${CXX}
+    - echo ${FC}
+
+before_script:
+    - cmake --version
+    - curl --version
+    - ${CC} --version
+    - ${CXX} --version
+    - ${FC} --version
+
+script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build .
+    - ctest

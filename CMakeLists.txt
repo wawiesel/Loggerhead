@@ -1,0 +1,20 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
+
+ADD_SUBDIRECTORY( external )
+
+# This sets BOTG_SOURCE_DIR which may be used later.
+INCLUDE( "${CMAKE_SOURCE_DIR}/external/Testing123/external/BootsOnTheGround/cmake/BOTG_INCLUDE.cmake" )
+
+# Configure the project.
+BOTG_ConfigureProject( "${CMAKE_SOURCE_DIR}" )
+TRIBITS_PROJECT_ENABLE_ALL()
+
+# Final print of all the variables for inspection.
+# For example: -D MATCH_VARIABLE_REGEX:STRING="" will print everything.
+#              -D MATCH_VARIABLE_REGEX:STRING="^BootsOnTheGround" will
+#                 print all the BootsOnTheGround variables.
+#
+IF( DEFINED MATCH_VARIABLE_REGEX )
+    BOTG_PrintAllVariables("${MATCH_VARIABLE_REGEX}")
+ENDIF()
+
