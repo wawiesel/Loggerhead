@@ -1,10 +1,3 @@
-/build
-/external/Testing123
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Makefile
-cmake_install.cmake
-install_manifest.txt
-CTestTestfile.cmake
-
+external/BootsOnTheGround/
+external/Testing123/
+build/

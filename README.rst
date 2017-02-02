@@ -1,7 +1,7 @@
 Template123
 ===========
 
-This is a project template demonstrating the use of Testing123_ for unit testing. 
+This is a project template demonstrating the use of Testing123_ for unit testing.
 
 ::
 
@@ -55,11 +55,8 @@ This is the main CMakeLists.txt file.
 
     CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
 
-    # First download external repositories.
-    ADD_SUBDIRECTORY( external )
-
     # This sets BOTG_SOURCE_DIR which may be used later.
-    INCLUDE( "${CMAKE_SOURCE_DIR}/external/Testing123/external/BootsOnTheGround/cmake/BOTG_INCLUDE.cmake" )
+    INCLUDE( "${CMAKE_SOURCE_DIR}/cmake/BOTG_INCLUDE.cmake" )
 
     # Configure the project.
     BOTG_ConfigureProject( "${CMAKE_SOURCE_DIR}" )
