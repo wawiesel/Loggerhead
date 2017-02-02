@@ -33,8 +33,10 @@ Template123 File Tree
     ├── README.rst
     ├── TPLsList.cmake
     ├── Version.cmake
+    ├── cmake
+    │   └── BOTG_INCLUDE.cmake
     ├── external
-    │   ├── CMakeLists.txt
+    │   ├── BootsOnTheGround.in
     │   └── Testing123.in
     └── src
         ├── CMakeLists.txt
@@ -47,6 +49,7 @@ Template123 File Tree
             └── tstDemo.f90
 
 
+
 CMakeLists.txt
 ------------------------------------------------------------------------------
 This is the main CMakeLists.txt file.
@@ -57,6 +60,9 @@ This is the main CMakeLists.txt file.
 
     # This sets BOTG_SOURCE_DIR which may be used later.
     INCLUDE( "${CMAKE_SOURCE_DIR}/cmake/BOTG_INCLUDE.cmake" )
+
+    # Download external projects.
+    BOTG_DownloadExternalProjects( Testing123 )
 
     # Configure the project.
     BOTG_ConfigureProject( "${CMAKE_SOURCE_DIR}" )
@@ -72,31 +78,85 @@ This is the main CMakeLists.txt file.
     ENDIF()
 
 
-external/CMakeLists.txt
+
+cmake/BOTG_INCLUDE.cmake
 ------------------------------------------------------------------------------
-This CMakeLists.txt file drives the download of all the dependent
-repositories. We just need to add them to the ``external_projects``
-list below. It is expected to find a *.in file for each, e.g.
-``Testing123.in``.
+This file is the key file to include from a project's central
+CMakeLists.txt to perform the BootsOnTheGround magic. It even
+bootstraps in a copy of the BootsOnTheGround repo if not found.
 
 .. code-block:: cmake
 
 
-    #List of external projects.
-    SET(external_projects
-        Testing123
+    #This function is special and needs to be here so it can be part of a
+    #Bootstrapping operation.
+    MACRO( BOTG_DownloadExternalProjects external_projects )
+        FOREACH( ep ${external_projects} )
+            MESSAGE( STATUS "loading external project=${ep}...")
+            SET( dest "${CMAKE_BINARY_DIR}/external/download/${ep}" )
+            CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/external/${ep}.in" "${dest}/CMakeLists.txt" )
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY "${dest}")
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY "${dest}")
+        ENDFOREACH()
+    ENDMACRO()
+
+    # Use cached value.
+    IF( DEFINED BOTG_SOURCE_DIR )
+
+        IF( EXISTS "${BOTG_SOURCE_DIR}" )
+            MESSAGE( STATUS "[BootsOnTheGround] using cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
+        ELSE()
+            MESSAGE( ERROR "[BootsOnTheGround] cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} does not exist!")
+        ENDIF()
+
+    # Set the BootsOnTheGround source directory!
+    ELSE()
+
+        SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround" CACHE PATH INTERNAL)
+
+        IF( EXISTS "${BOTG_SOURCE_DIR}" )
+            MESSAGE( STATUS "[BootsOnTheGround] using BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
+        ELSE()
+            MESSAGE( STATUS "[BootsOnTheGround] bootstrapping in...")
+            BOTG_DownloadExternalProjects( BootsOnTheGround )
+        ENDIF()
+
+    ENDIF()
+
+    # Includes all the "BootsOnTheGround" (BOTG) functions.
+    INCLUDE( "${BOTG_SOURCE_DIR}/cmake/BOTG.cmake" )
+
+
+
+
+external/BootsOnTheGround.in
+------------------------------------------------------------------------------
+This file is configured and then treated like its own
+CMakeLists.txt file to drive the download using only
+CMake and the awesome ``ExternalProject_Add`` command.
+
+.. code-block:: cmake
+
+    CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
+    PROJECT(download-external-BootsOnTheGround NONE)
+
+    MESSAGE( STATUS "[BootsOnTheGround] downloading to ${CMAKE_SOURCE_DIR}/external/BootsOnTheGround...")
+
+    INCLUDE(ExternalProject)
+    ExternalProject_Add( download-external-BootsOnTheGround
+      GIT_REPOSITORY
+        https://github.com/wawiesel/BootsOnTheGround.git
+      GIT_TAG
+        develop
+      SOURCE_DIR
+        "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround"
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND     ""
+      INSTALL_COMMAND   ""
+      TEST_COMMAND      ""
     )
 
-    #Loop over them and configure and execute an internal configure/build
-    #to download each one.
-    FOREACH( ep ${external_projects} )
-        MESSAGE( STATUS "loading external project=${ep}...")
-        CONFIGURE_FILE(${ep}.in download/${ep}/CMakeLists.txt)
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
-            . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/external/download/${ep})
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build
-            . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/external/download/${ep})
-    ENDFOREACH()
+    MESSAGE( STATUS "[BootsOnTheGround] done downloading!")
 
 
 external/Testing123.in
@@ -117,7 +177,7 @@ CMake and the awesome ``ExternalProject_Add`` command.
       GIT_TAG
         master
       SOURCE_DIR
-        "${CMAKE_CURRENT_LIST_DIR}/Testing123"
+        "${CMAKE_SOURCE_DIR}/external/Testing123"
       CONFIGURE_COMMAND ""
       BUILD_COMMAND     ""
       INSTALL_COMMAND   ""
@@ -132,11 +192,10 @@ This is the list of dependent package files.
 Every TriBITS repository/project must define this.
 I put the ones in external that I do not own and the ones I do
 own in src/. Note that the external packages will only be downloaded
-at configure time and we are using Testing123's internal BootsOnTheGround.
-Note also that we point to the ``src`` directory because that is where
-the **package** CMakeLists.txt resides, not to be confused with the
-**project** CMakeLists.txt which sits at the root and provides "standalone"
-configure/build capability.
+at configure time. Note also that we point to the ``src`` directory because
+that is where the **package** CMakeLists.txt resides, not to be confused
+with the **project** CMakeLists.txt which sits at the root and provides
+"standalone" configure/build capability.
 
 Finally, do note that the order is important! We must move downstream
 from most basic to most complex for TriBITS to resolve dependencies.
@@ -144,9 +203,9 @@ from most basic to most complex for TriBITS to resolve dependencies.
 .. code-block:: cmake
 
     TRIBITS_REPOSITORY_DEFINE_PACKAGES(
-      BootsOnTheGround external/Testing123/external/BootsOnTheGround/src          ST
-      Testing123       external/Testing123/src                                    ST
-      Template123      src                                                        PT
+      BootsOnTheGround external/BootsOnTheGround/src     ST
+      Testing123       external/Testing123/src           ST
+      Template123      src                               PT
     )
 
 
@@ -174,6 +233,7 @@ TriBITS requires this file but we aren't really using it...yet.
     SET(${REPOSITORY_NAME}_VERSION "${${REPOSITORY_NAME}_MAJOR_VERSION}.1")
 
 
+
 src/CMakeLists.txt
 ------------------------------------------------------------------------------
 This is a standard **package** CMakeLists.txt file describing
@@ -196,6 +256,7 @@ directory. You can also build a library with ``TRIBITS_ADD_LIBRARY``.
 
     #Do this at the end.
     TRIBITS_PACKAGE_POSTPROCESS()
+
 
 src/CMakeLists.txt
 ------------------------------------------------------------------------------
@@ -220,7 +281,8 @@ Regeneration Script
 .. code-block:: bash
 
     for f in CMakeLists.txt \
-             external/CMakeLists.txt \
+             cmake/BOTG_INCLUDE.cmake \
+             external/BootsOnTheGround.in \
              external/Testing123.in \
              PackagesList.cmake \
              ProjectName.cmake \
