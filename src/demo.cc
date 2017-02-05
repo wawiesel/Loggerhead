@@ -9,19 +9,6 @@
 
 namespace spd = spdlog;
 
-// user defined types logging by implementing operator<<
-struct my_type
-{
-    int i;
-    template <typename OStream>
-    friend OStream& operator<<( OStream& os, const my_type& c )
-    {
-        os << std::string( c.i, 'x' ) << std::flush;
-        system( "sleep 0.05s" );
-        return os;
-    }
-};
-
 int main( int, char* [] )
 {
     // Console logger with color
@@ -33,17 +20,9 @@ int main( int, char* [] )
     stdout->error(
         "Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42 );
     stdout->info( "Support for floats {:03.2f}", 1.23456 );
-    stdout->info( "Positional args are {1} {0}..", "too", "supported" );
-    stdout->info( "{:<30}", "left aligned" );
+    stdout->info( "Positional args are {1} {0}...", "too", "supported" );
+    stdout->info( "alignment: |{:<10}|{:>10}|{:^10}|", "left","right","center");
     stdout->trace( "trace me {:03d}", 7 );
 
-    auto progress = spd::stderr_logger_mt( "stderr", /*color=*/true );
-    // auto progress = spd::progress_logger_mt( "progress" );
-    for( int i = 0; i < 100; ++i )
-    {
-        progress->warn( "{:<130}", fmt::format( "{}", i ) );
-        std::cerr << my_type{i};
-    }
-    std::cerr << "\r" << my_type{100} << std::endl;
     return 0;
 }
