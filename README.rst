@@ -18,7 +18,7 @@ Yes, it is a deep heirarchy.
 - TriBITS_ gives us project dependency management and best-practice macros.
 - CMake_ gives us cross-platform (Windows/Linux/Mac) compatibility.
 
-Let's go through the Template123_ project as if we were ``cmake`` [*]_.
+Let's go through the Template123_ project like ``cmake`` [*]_.
 
 Template123 File Tree
 ---------------------
@@ -43,10 +43,87 @@ Template123 File Tree
         ├── cmake
         │   └── Dependencies.cmake
         ├── demo.cc
+        ├── spdlog
+        │   ├── progress_logger.hh
+        │   ├── progress_logger.i.hh
+        │   ├── sinks
+        │   │   ├── progress_sink.cc
+        │   │   ├── progress_sink.hh
+        │   │   └── progress_sink.i.hh
+        │   └── test
+        │       ├── CMakeLists.txt
+        │       └── tstprogress_logger.cc
+        ├── term
+        │   ├── color.cc
+        │   ├── color.hh
+        │   ├── info.cc
+        │   ├── info.hh
+        │   ├── progress_bar.cc
+        │   ├── progress_bar.hh
+        │   ├── progress_calculator.cc
+        │   ├── progress_calculator.hh
+        │   └── test
+        │       ├── CMakeLists.txt
+        │       ├── tstcolor.cc
+        │       ├── tstinfo.cc
+        │       ├── tstprogress_bar.cc
+        │       └── tstprogress_calculator.cc
         └── test
             ├── CMakeLists.txt
             ├── tstDemo.cc
             └── tstDemo.f90
+
+
+
+cmake/BOTG_INCLUDE.cmake
+------------------------------------------------------------------------------
+This file is the key file to include from a project's central
+CMakeLists.txt to perform the BootsOnTheGround magic. It even
+bootstraps in a copy of the BootsOnTheGround repo if not found.
+
+.. code-block:: cmake
+
+
+    #This function needs to be here instead of in BOTG.cmake so it can be part of a
+    #Bootstrapping operation.
+    MACRO( BOTG_DownloadExternalProjects external_projects )
+        FOREACH( ep ${external_projects} )
+            IF( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${ep}" )
+                MESSAGE( FATAL_ERROR "[BootsOnTheGround] cannot find external project download file=${ep}" )
+            ENDIF()
+            GET_FILENAME_COMPONENT( dir "${ep}" DIRECTORY )
+            GET_FILENAME_COMPONENT( project "${ep}" NAME_WE )
+            SET( BOTG_EXTERNAL_SOURCE_DIR_${project} "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${project}" CACHE PATH INTERNAL)
+
+            SET( dest "${CMAKE_BINARY_DIR}/_DOWNLOAD/${dir}/${project}" )
+            MESSAGE( STATUS "[BootsOnTheGround] bootstrapping project ${ep} ... ")
+
+            CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${ep}" "${dest}/CMakeLists.txt" )
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY "${dest}")
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY "${dest}")
+        ENDFOREACH()
+    ENDMACRO()
+
+
+    # Default to bootstrapping.
+    SET(BOTG_BOOTSTRAP ON CACHE BOOL INTERNAL)
+
+    # If we bootstrap, then set the source directory and update the projects.
+    IF( BOTG_BOOTSTRAP )
+        SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround" CACHE PATH INTERNAL)
+        BOTG_DownloadExternalProjects(
+            external/BootsOnTheGround.in
+        )
+    #If we don't, then we are building BootsOnTheGround as a project so it's easy.
+    ELSE()
+        SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH INTERNAL)
+    ENDIF()
+
+    MESSAGE( STATUS "[BootsOnTheGround] using BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR}")
+
+    # Includes all the "BootsOnTheGround" (BOTG) functions.
+    INCLUDE( "${BOTG_SOURCE_DIR}/cmake/BOTG.cmake" )
+
 
 
 
@@ -62,7 +139,9 @@ This is the main CMakeLists.txt file.
     INCLUDE( "${CMAKE_SOURCE_DIR}/cmake/BOTG_INCLUDE.cmake" )
 
     # Download external projects.
-    BOTG_DownloadExternalProjects( Testing123 )
+    BOTG_DownloadExternalProjects(
+        external/Testing123.in
+    )
 
     # Configure the project.
     BOTG_ConfigureProject( "${CMAKE_SOURCE_DIR}" )
@@ -76,114 +155,6 @@ This is the main CMakeLists.txt file.
     IF( DEFINED MATCH_VARIABLE_REGEX )
         BOTG_PrintAllVariables("${MATCH_VARIABLE_REGEX}")
     ENDIF()
-
-
-
-cmake/BOTG_INCLUDE.cmake
-------------------------------------------------------------------------------
-This file is the key file to include from a project's central
-CMakeLists.txt to perform the BootsOnTheGround magic. It even
-bootstraps in a copy of the BootsOnTheGround repo if not found.
-
-.. code-block:: cmake
-
-
-    #This function is special and needs to be here so it can be part of a
-    #Bootstrapping operation.
-    MACRO( BOTG_DownloadExternalProjects external_projects )
-        FOREACH( ep ${external_projects} )
-            MESSAGE( STATUS "loading external project=${ep}...")
-            SET( dest "${CMAKE_BINARY_DIR}/external/download/${ep}" )
-            CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/external/${ep}.in" "${dest}/CMakeLists.txt" )
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY "${dest}")
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY "${dest}")
-        ENDFOREACH()
-    ENDMACRO()
-
-    # Use cached value.
-    IF( DEFINED BOTG_SOURCE_DIR )
-
-        IF( EXISTS "${BOTG_SOURCE_DIR}" )
-            MESSAGE( STATUS "[BootsOnTheGround] using cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
-        ELSE()
-            MESSAGE( ERROR "[BootsOnTheGround] cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} does not exist!")
-        ENDIF()
-
-    # Set the BootsOnTheGround source directory!
-    ELSE()
-
-        SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround" CACHE PATH INTERNAL)
-
-        IF( EXISTS "${BOTG_SOURCE_DIR}" )
-            MESSAGE( STATUS "[BootsOnTheGround] using BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
-        ELSE()
-            MESSAGE( STATUS "[BootsOnTheGround] bootstrapping in...")
-            BOTG_DownloadExternalProjects( BootsOnTheGround )
-        ENDIF()
-
-    ENDIF()
-
-    # Includes all the "BootsOnTheGround" (BOTG) functions.
-    INCLUDE( "${BOTG_SOURCE_DIR}/cmake/BOTG.cmake" )
-
-
-
-
-external/BootsOnTheGround.in
-------------------------------------------------------------------------------
-This file is configured and then treated like its own
-CMakeLists.txt file to drive the download using only
-CMake and the awesome ``ExternalProject_Add`` command.
-
-.. code-block:: cmake
-
-    CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
-    PROJECT(download-external-BootsOnTheGround NONE)
-
-    MESSAGE( STATUS "[BootsOnTheGround] downloading to ${CMAKE_SOURCE_DIR}/external/BootsOnTheGround...")
-
-    INCLUDE(ExternalProject)
-    ExternalProject_Add( download-external-BootsOnTheGround
-      GIT_REPOSITORY
-        https://github.com/wawiesel/BootsOnTheGround.git
-      GIT_TAG
-        develop
-      SOURCE_DIR
-        "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround"
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND     ""
-      INSTALL_COMMAND   ""
-      TEST_COMMAND      ""
-    )
-
-    MESSAGE( STATUS "[BootsOnTheGround] done downloading!")
-
-
-external/Testing123.in
-------------------------------------------------------------------------------
-This file is configured and then treated like its own
-CMakeLists.txt file to drive the download using only
-CMake and the awesome ``ExternalProject_Add`` command.
-
-.. code-block:: cmake
-
-    CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
-    PROJECT(download-external-Testing123 NONE)
-
-    INCLUDE(ExternalProject)
-    ExternalProject_Add( download-external-Testing123
-      GIT_REPOSITORY
-        https://github.com/wawiesel/Testing123.git
-      GIT_TAG
-        master
-      SOURCE_DIR
-        "${CMAKE_SOURCE_DIR}/external/Testing123"
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND     ""
-      INSTALL_COMMAND   ""
-      TEST_COMMAND      ""
-    )
-
 
 
 PackagesList.cmake
@@ -220,44 +191,6 @@ than the **package** name! I prefix it with ``project-``.
     SET(PROJECT_NAME project-Template123)
 
 
-Version.cmake
-------------------------------------------------------------------------------
-TriBITS requires this file but we aren't really using it...yet.
-
-.. code-block:: cmake
-
-    IF ("${REPOSITORY_NAME}" STREQUAL "")
-      SET(REPOSITORY_NAME "Template123")
-    ENDIF()
-    SET(${REPOSITORY_NAME}_MAJOR_VERSION "0" )
-    SET(${REPOSITORY_NAME}_VERSION "${${REPOSITORY_NAME}_MAJOR_VERSION}.1")
-
-
-
-src/CMakeLists.txt
-------------------------------------------------------------------------------
-This is a standard **package** CMakeLists.txt file describing
-the code. Below I build an executable and declare a test
-directory. You can also build a library with ``TRIBITS_ADD_LIBRARY``.
-
-.. code-block:: cmake
-
-
-    #Do this at the beginning of a package.
-    TRIBITS_PACKAGE( Template123 )
-
-    TRIBITS_ADD_TEST_DIRECTORIES( test )
-
-    TRIBITS_ADD_EXECUTABLE( demo
-      NOEXEPREFIX
-      SOURCES
-        demo.cc
-    )
-
-    #Do this at the end.
-    TRIBITS_PACKAGE_POSTPROCESS()
-
-
 src/CMakeLists.txt
 ------------------------------------------------------------------------------
 Every TriBITS package must declare its dependencies.
@@ -275,20 +208,125 @@ If you are using BootsOnTheGround, then you can add TPLs
     )
     BOTG_AddTPL( LIB REQUIRED Spdlog )
 
+
+src/CMakeLists.txt
+------------------------------------------------------------------------------
+This is a standard **package** CMakeLists.txt file describing
+the code. Below I build an executable, a library, install headers,
+#and declare a test directory.
+
+.. code-block:: cmake
+
+
+    #Do this at the beginning of a package.
+    TRIBITS_PACKAGE( Template123 )
+
+    TRIBITS_ADD_LIBRARY( Template123
+      SOURCES
+        spdlog/sinks/progress_sink.cc
+        term/color.cc
+        term/info.cc
+        term/progress_bar.cc
+        term/progress_calculator.cc
+    )
+
+    INCLUDE_DIRECTORIES(
+        ${CMAKE_CURRENT_LIST_DIR}
+    )
+
+    #include/spdlog
+    INSTALL(
+      FILES
+        spdlog/progress_logger.hh
+        spdlog/progress_logger.i.hh
+      DESTINATION
+        include/spdlog
+    )
+
+    #include/spdlog/sinks
+    INSTALL(
+      FILES
+        spdlog/sinks/progress_sink.hh
+        spdlog/sinks/progress_sink.i.hh
+      DESTINATION
+        include/spdlog
+    )
+
+    #include/term
+    INSTALL(
+      FILES
+        term/color.hh
+        term/info.hh
+        term/progress_bar.hh
+        term/progress_calculator.hh
+      DESTINATION
+        include/term
+    )
+
+    TRIBITS_ADD_EXECUTABLE( demo
+      NOEXEPREFIX
+      SOURCES
+        demo.cc
+    )
+
+    TRIBITS_ADD_TEST_DIRECTORIES(
+        test
+        spdlog/test
+        term/test
+    )
+
+    #Do this at the end.
+    TRIBITS_PACKAGE_POSTPROCESS()
+    ADD_CXX_TEST( tstprogress_logger.cc )
+    ADD_CXX_TEST( tstprogress_calculator.cc )
+    ADD_CXX_TEST( tstprogress_bar.cc )
+    ADD_CXX_TEST( tstcolor.cc )
+    ADD_CXX_TEST( tstinfo.cc )
+    ADD_FORTRAN_TEST( tstDemo.f90 )
+    ADD_CXX_TEST( tstDemo.cc )
+
+
+TPLsList.cmake
+------------------------------------------------------------------------------
+This is a required TriBITS file and here we just defer to the one
+in BootsOnTheGround. If you are using BootsOnTheGround, this is what
+you should do. If BootsOnTheGround doesn't have your TPL...add it!
+
+.. code-block:: cmake
+
+    INCLUDE( "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround/TPLsList.cmake" )
+
+
+Version.cmake
+------------------------------------------------------------------------------
+TriBITS requires this file but we aren't really using it...yet.
+
+.. code-block:: cmake
+
+    IF ("${REPOSITORY_NAME}" STREQUAL "")
+      SET(REPOSITORY_NAME "Template123")
+    ENDIF()
+    SET(${REPOSITORY_NAME}_MAJOR_VERSION "0" )
+    SET(${REPOSITORY_NAME}_VERSION "${${REPOSITORY_NAME}_MAJOR_VERSION}.1")
+
+
 Regeneration Script
 -------------------
 
 .. code-block:: bash
 
-    for f in CMakeLists.txt \
-             cmake/BOTG_INCLUDE.cmake \
-             external/BootsOnTheGround.in \
-             external/Testing123.in \
-             PackagesList.cmake \
-             ProjectName.cmake \
-             Version.cmake \
-             src/CMakeLists.txt \
-             src/cmake/Dependencies.cmake;
+    for f in \
+        cmake/BOTG_INCLUDE.cmake\
+        CMakeLists.txt\
+        PackagesList.cmake\
+        ProjectName.cmake\
+        src/cmake/Dependencies.cmake\
+        src/CMakeLists.txt\
+        src/spdlog/test/CMakeLists.txt\
+        src/term/test/CMakeLists.txt\
+        src/test/CMakeLists.txt\
+        TPLsList.cmake\
+        Version.cmake;
     do
         gsed 's|^|    |g' $f | gsed 's|^    ##||g'
     done
