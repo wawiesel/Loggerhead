@@ -63,7 +63,7 @@ class progress_bar
     double bar_width_fraction() const;
 
     //
-    const info& info() const;
+    const ::term::info& info() const;
 
     // formatters used internally
     static std::string percentage_text( double progress_fraction );
