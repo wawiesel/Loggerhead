@@ -74,7 +74,6 @@ Template123 File Tree
             └── tstDemo.f90
 
 
-
 cmake/BOTG_INCLUDE.cmake
 ------------------------------------------------------------------------------
 This file is the key file to include from a project's central
@@ -277,7 +276,25 @@ the code. Below I build an executable, a library, install headers,
 
     #Do this at the end.
     TRIBITS_PACKAGE_POSTPROCESS()
+
+
+src/spdlog/test/CMakeLists.txt
+------------------------------------------------------------------------------
+This is usually all that's required in a unit test CMakeLists.txt file.
+
+.. code-block:: cmake
+
+
     ADD_CXX_TEST( tstprogress_logger.cc )
+
+
+src/term/test/CMakeLists.txt
+------------------------------------------------------------------------------
+This is usually all that's required in a unit test CMakeLists.txt file.
+
+.. code-block:: cmake
+
+
     ADD_CXX_TEST( tstprogress_calculator.cc )
     ADD_CXX_TEST( tstprogress_bar.cc )
     ADD_CXX_TEST( tstcolor.cc )
@@ -310,6 +327,7 @@ TriBITS requires this file but we aren't really using it...yet.
     SET(${REPOSITORY_NAME}_VERSION "${${REPOSITORY_NAME}_MAJOR_VERSION}.1")
 
 
+
 Regeneration Script
 -------------------
 
@@ -337,4 +355,6 @@ Regeneration Script
 .. _BOTG: http://github.com/wawiesel/BootsOnTheGround
 .. _Testing123: http://github.com/wawiesel/Testing123
 .. _Template123: http://github.com/wawiesel/Template123
+
+
 
