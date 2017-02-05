@@ -9,40 +9,42 @@
 ##.. code-block:: cmake
 ##
 
-#This function is special and needs to be here so it can be part of a
+#This function needs to be here instead of in BOTG.cmake so it can be part of a
 #Bootstrapping operation.
 MACRO( BOTG_DownloadExternalProjects external_projects )
     FOREACH( ep ${external_projects} )
-        MESSAGE( STATUS "loading external project=${ep}...")
-        SET( dest "${CMAKE_BINARY_DIR}/external/download/${ep}" )
-        CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/external/${ep}.in" "${dest}/CMakeLists.txt" )
+        IF( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${ep}" )
+            MESSAGE( FATAL_ERROR "[BootsOnTheGround] cannot find external project download file=${ep}" )
+        ENDIF()
+        GET_FILENAME_COMPONENT( dir "${ep}" DIRECTORY )
+        GET_FILENAME_COMPONENT( project "${ep}" NAME_WE )
+        SET( BOTG_EXTERNAL_SOURCE_DIR_${project} "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${project}" CACHE PATH INTERNAL)
+
+        SET( dest "${CMAKE_BINARY_DIR}/_DOWNLOAD/${dir}/${project}" )
+        MESSAGE( STATUS "[BootsOnTheGround] bootstrapping project ${ep} ... ")
+
+        CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${ep}" "${dest}/CMakeLists.txt" )
         EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY "${dest}")
         EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY "${dest}")
     ENDFOREACH()
 ENDMACRO()
 
-# Use cached value.
-IF( DEFINED BOTG_SOURCE_DIR )
 
-    IF( EXISTS "${BOTG_SOURCE_DIR}" )
-        MESSAGE( STATUS "[BootsOnTheGround] using cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
-    ELSE()
-        MESSAGE( ERROR "[BootsOnTheGround] cached BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} does not exist!")
-    ENDIF()
+# Default to bootstrapping.
+SET(BOTG_BOOTSTRAP ON CACHE BOOL INTERNAL)
 
-# Set the BootsOnTheGround source directory!
-ELSE()
-
+# If we bootstrap, then set the source directory and update the projects.
+IF( BOTG_BOOTSTRAP )
     SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround" CACHE PATH INTERNAL)
-
-    IF( EXISTS "${BOTG_SOURCE_DIR}" )
-        MESSAGE( STATUS "[BootsOnTheGround] using BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR} ... ")
-    ELSE()
-        MESSAGE( STATUS "[BootsOnTheGround] bootstrapping in...")
-        BOTG_DownloadExternalProjects( BootsOnTheGround )
-    ENDIF()
-
+    BOTG_DownloadExternalProjects(
+        external/BootsOnTheGround.in
+    )
+#If we don't, then we are building BootsOnTheGround as a project so it's easy.
+ELSE()
+    SET(BOTG_SOURCE_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH INTERNAL)
 ENDIF()
+
+MESSAGE( STATUS "[BootsOnTheGround] using BOTG_SOURCE_DIR=${BOTG_SOURCE_DIR}")
 
 # Includes all the "BootsOnTheGround" (BOTG) functions.
 INCLUDE( "${BOTG_SOURCE_DIR}/cmake/BOTG.cmake" )

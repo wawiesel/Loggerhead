@@ -1,5 +1,2 @@
 #include "t123/TestExe.hh"
-TEST(A,B)
-{
-    EXPECT_EQ(1,1);
-}
+TEST( A, B ) { EXPECT_EQ( 1, 1 ); }

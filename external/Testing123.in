@@ -11,6 +11,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
 PROJECT(download-external-Testing123 NONE)
 
+MESSAGE( STATUS "[Testing123] downloading Testing123...")
+
 INCLUDE(ExternalProject)
 ExternalProject_Add( download-external-Testing123
   GIT_REPOSITORY
@@ -18,10 +20,12 @@ ExternalProject_Add( download-external-Testing123
   GIT_TAG
     master
   SOURCE_DIR
-    "${CMAKE_SOURCE_DIR}/external/Testing123"
+    "${BOTG_EXTERNAL_SOURCE_DIR_Testing123}"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""
   INSTALL_COMMAND   ""
   TEST_COMMAND      ""
+  UPDATE_COMMAND    ""
 )
 
+MESSAGE( STATUS "[Testing123] done downloading!")

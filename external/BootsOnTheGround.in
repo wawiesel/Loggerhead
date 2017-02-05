@@ -11,7 +11,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.2)
 PROJECT(download-external-BootsOnTheGround NONE)
 
-MESSAGE( STATUS "[BootsOnTheGround] downloading to ${CMAKE_SOURCE_DIR}/external/BootsOnTheGround...")
+MESSAGE( STATUS "[BootsOnTheGround] downloading BootsOnTheGround...")
 
 INCLUDE(ExternalProject)
 ExternalProject_Add( download-external-BootsOnTheGround
@@ -20,11 +20,12 @@ ExternalProject_Add( download-external-BootsOnTheGround
   GIT_TAG
     develop
   SOURCE_DIR
-    "${CMAKE_SOURCE_DIR}/external/BootsOnTheGround"
+    "${BOTG_EXTERNAL_SOURCE_DIR_BootsOnTheGround}"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""
   INSTALL_COMMAND   ""
   TEST_COMMAND      ""
+  UPDATE_COMMAND    ""
 )
 
 MESSAGE( STATUS "[BootsOnTheGround] done downloading!")
