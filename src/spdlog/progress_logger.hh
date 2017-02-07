@@ -7,6 +7,7 @@
 
 namespace spdlog
 {
+
 std::shared_ptr<spdlog::logger> progress_logger_mt(
     const std::string& logger_name, int total_tasks, bool color = true );
 

@@ -8,20 +8,26 @@ namespace spdlog
 namespace sinks
 {
 template <class Mutex>
-progress_sink<Mutex>::progress_sink( int total_tasks )
-    : bar(std::cerr), progress_calculator( total_tasks )
+progress_sink<Mutex>::progress_sink()
+    : bar(std::cerr), progress_calculator(1)
 {
 }
 
+template <class Mutex>
+std::shared_ptr<progress_sink<Mutex>> progress_sink<Mutex>::instance()
+{
+    static std::shared_ptr<progress_sink<Mutex>> instance =
+        std::make_shared<progress_sink<Mutex>>();
+    return instance;
+}
 
 template <class Mutex>
 std::shared_ptr<progress_sink<Mutex>> progress_sink<Mutex>::instance(int total_tasks)
 {
-    static std::shared_ptr<progress_sink<Mutex>> instance =
-        std::make_shared<progress_sink<Mutex>>(total_tasks);
-    instance->reset(total_tasks);
-    instance->set_allow_autoupdate(true);
-    return instance;
+    auto sink = instance();
+    sink->reset(total_tasks);
+    sink->set_allow_autoupdate(true);
+    return sink;
 }
 
 template <class Mutex>

@@ -19,11 +19,12 @@ class progress_sink : public stderr_sink<Mutex>,
 
   public:
     term::progress_bar bar;
+    static std::shared_ptr<MyType> instance();
     static std::shared_ptr<MyType> instance(int total_tasks);
     void _sink_it( const details::log_msg& msg ) override;
     void flush() override;
     bool is_tty() const;
-    progress_sink( int total_tasks );
+    progress_sink();
 
 };  // end class progress_sink
 
