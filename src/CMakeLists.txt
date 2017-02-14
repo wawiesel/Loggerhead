@@ -12,8 +12,9 @@
 #Do this at the beginning of a package.
 TRIBITS_PACKAGE( Template123 )
 
-BOTG_AddCompilerFlags( CXX ANY ANY
-    "-std=c++11"
+BOTG_UseCxxStandard( 11 )
+BOTG_AddCompilerFlags( CXX ANY Linux
+    "-pthread"
 )
 
 TRIBITS_ADD_LIBRARY( Template123
