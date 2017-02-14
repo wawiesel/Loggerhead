@@ -3,9 +3,9 @@ module tstDemo_M
 implicit none
 contains
 
-TEST( A,B )
+TEST( A,B ){
     EXPECT_EQ(1,1)
-END_TEST
+}
 
 end module
 
