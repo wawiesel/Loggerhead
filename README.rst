@@ -1,9 +1,9 @@
 Loggerhead [WIP]
 ================
 
-.. image:: http://i.imgur.com/YAQaRZx.jpg
-
 CMake/TriBITS-enabled C++/Fortran logging and more using Spdlog
+
+.. image:: http://i.imgur.com/YAQaRZx.jpg
 
 This has been migrated from a project template called Templat123 
 demonstrating the use of Testing123_ for unit testing.
