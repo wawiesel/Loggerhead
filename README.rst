@@ -1,7 +1,7 @@
 Loggerhead [WIP]
 ================
 
-CMake/TriBITS-enabled C++/Fortran logging and more using Spdlog
+CMake_/TriBITS_ logging and more for C++/Fortran 
 
 .. image:: http://i.imgur.com/YAQaRZx.jpg
 
