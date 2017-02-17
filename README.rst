@@ -1,7 +1,12 @@
-Template123
-===========
+Loggerhead [WIP]
+================
 
-This is a project template demonstrating the use of Testing123_ for unit testing.
+.. image:: http://i.imgur.com/YAQaRZx.jpg
+
+CMake/TriBITS-enabled C++/Fortran logging and more using Spdlog
+
+This has been migrated from a project template called Templat123 
+demonstrating the use of Testing123_ for unit testing.
 
 ::
 
