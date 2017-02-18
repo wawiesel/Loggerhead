@@ -1,5 +1,5 @@
-#ifndef Template123_term_progress_bar_HH
-#define Template123_term_progress_bar_HH
+#ifndef Loggerhead_term_progress_bar_HH
+#define Loggerhead_term_progress_bar_HH
 
 #include "color.hh"
 #include "info.hh"

@@ -19,5 +19,5 @@
 TRIBITS_REPOSITORY_DEFINE_PACKAGES(
   BootsOnTheGround external/BootsOnTheGround/src     ST
   Testing123       external/Testing123/src           ST
-  Template123      src                               PT
+  Loggerhead      src                               PT
 )

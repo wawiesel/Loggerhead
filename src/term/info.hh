@@ -1,5 +1,5 @@
-#ifndef Template123_term_info_HH
-#define Template123_term_info_HH
+#ifndef Loggerhead_term_info_HH
+#define Loggerhead_term_info_HH
 
 #include <ostream>
 
@@ -23,4 +23,4 @@ class info
 
 }  // term
 
-#endif  // Template123_term_info_HH
+#endif  // Loggerhead_term_info_HH

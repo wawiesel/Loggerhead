@@ -23,9 +23,9 @@ Yes, it is a deep heirarchy.
 - TriBITS_ gives us project dependency management and best-practice macros.
 - CMake_ gives us cross-platform (Windows/Linux/Mac) compatibility.
 
-Let's go through the Template123_ project like ``cmake`` [*]_.
+Let's go through the Loggerhead_ project like ``cmake`` [*]_.
 
-Template123 File Tree
+Loggerhead File Tree
 ---------------------
 
 ::
@@ -180,7 +180,7 @@ from most basic to most complex for TriBITS to resolve dependencies.
     TRIBITS_REPOSITORY_DEFINE_PACKAGES(
       BootsOnTheGround external/BootsOnTheGround/src     ST
       Testing123       external/Testing123/src           ST
-      Template123      src                               PT
+      Loggerhead      src                               PT
     )
 
 
@@ -192,7 +192,7 @@ than the **package** name! I prefix it with ``project-``.
 .. code-block:: cmake
 
 
-    SET(PROJECT_NAME project-Template123)
+    SET(PROJECT_NAME project-Loggerhead)
 
 
 src/CMakeLists.txt
@@ -223,9 +223,9 @@ the code. Below I build an executable, a library, install headers,
 
 
     #Do this at the beginning of a package.
-    TRIBITS_PACKAGE( Template123 )
+    TRIBITS_PACKAGE( Loggerhead )
 
-    TRIBITS_ADD_LIBRARY( Template123
+    TRIBITS_ADD_LIBRARY( Loggerhead
       SOURCES
         spdlog/sinks/progress_sink.cc
         term/color.cc
@@ -334,7 +334,7 @@ TriBITS requires this file but we aren't really using it...yet.
 .. code-block:: cmake
 
     IF ("${REPOSITORY_NAME}" STREQUAL "")
-      SET(REPOSITORY_NAME "Template123")
+      SET(REPOSITORY_NAME "Loggerhead")
     ENDIF()
     SET(${REPOSITORY_NAME}_MAJOR_VERSION "0" )
     SET(${REPOSITORY_NAME}_VERSION "${${REPOSITORY_NAME}_MAJOR_VERSION}.1")
@@ -367,7 +367,7 @@ Regeneration Script
 .. _TriBITS: https://tribits.org
 .. _BOTG: http://github.com/wawiesel/BootsOnTheGround
 .. _Testing123: http://github.com/wawiesel/Testing123
-.. _Template123: http://github.com/wawiesel/Template123
+.. _Loggerhead: http://github.com/wawiesel/Loggerhead
 
 
 

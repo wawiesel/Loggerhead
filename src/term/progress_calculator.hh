@@ -1,5 +1,5 @@
-#ifndef Template123_term_progress_calculator_HH
-#define Template123_term_progress_calculator_HH
+#ifndef Loggerhead_term_progress_calculator_HH
+#define Loggerhead_term_progress_calculator_HH
 
 #include <chrono>
 

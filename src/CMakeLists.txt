@@ -10,14 +10,14 @@
 ##
 
 #Do this at the beginning of a package.
-TRIBITS_PACKAGE( Template123 )
+TRIBITS_PACKAGE( Loggerhead )
 
 BOTG_UseCxxStandard( 11 )
 BOTG_AddCompilerFlags( CXX ANY Linux
     "-pthread"
 )
 
-TRIBITS_ADD_LIBRARY( Template123
+TRIBITS_ADD_LIBRARY( Loggerhead
   SOURCES
     spdlog/sinks/progress_sink.cc
     term/color.cc
@@ -59,14 +59,7 @@ INSTALL(
     include/term
 )
 
-TRIBITS_ADD_EXECUTABLE( demo
-  NOEXEPREFIX
-  SOURCES
-    demo.cc
-)
-
 TRIBITS_ADD_TEST_DIRECTORIES(
-    test
     spdlog/test
     term/test
 )

@@ -1,5 +1,5 @@
-#ifndef Template123_spdlog_sinks_progress_sink_HH
-#define Template123_spdlog_sinks_progress_sink_HH
+#ifndef Loggerhead_spdlog_sinks_progress_sink_HH
+#define Loggerhead_spdlog_sinks_progress_sink_HH
 
 #include "spdlog/sinks/stdout_sinks.h"
 #include "term/progress_bar.hh"

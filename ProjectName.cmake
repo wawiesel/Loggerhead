@@ -8,4 +8,4 @@
 ##.. code-block:: cmake
 ##
 
-SET(PROJECT_NAME project-Template123)
+SET(PROJECT_NAME project-Loggerhead)

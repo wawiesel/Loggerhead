@@ -1,5 +1,5 @@
-#ifndef Template123_spdlog_progress_logger_HH
-#define Template123_spdlog_progress_logger_HH
+#ifndef Loggerhead_spdlog_progress_logger_HH
+#define Loggerhead_spdlog_progress_logger_HH
 
 #include <memory>
 #include <string>
