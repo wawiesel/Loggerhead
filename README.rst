@@ -1,5 +1,5 @@
-Loggerhead [WIP]
-================
+Loggerhead
+==========
 
 CMake_/TriBITS_ logging and more for C++/Fortran 
 
@@ -30,53 +30,49 @@ Loggerhead File Tree
 
 ::
 
-    .
-    ├── CMakeLists.txt
-    ├── LICENSE
-    ├── PackagesList.cmake
-    ├── ProjectName.cmake
-    ├── README.rst
-    ├── TPLsList.cmake
-    ├── Version.cmake
-    ├── cmake
-    │   └── BOTG_INCLUDE.cmake
-    ├── external
-    │   ├── BootsOnTheGround.in
-    │   └── Testing123.in
-    └── src
-        ├── CMakeLists.txt
-        ├── cmake
-        │   └── Dependencies.cmake
-        ├── demo.cc
-        ├── spdlog
-        │   ├── progress_logger.hh
-        │   ├── progress_logger.i.hh
-        │   ├── sinks
-        │   │   ├── progress_sink.cc
-        │   │   ├── progress_sink.hh
-        │   │   └── progress_sink.i.hh
-        │   └── test
-        │       ├── CMakeLists.txt
-        │       └── tstprogress_logger.cc
-        ├── term
-        │   ├── color.cc
-        │   ├── color.hh
-        │   ├── info.cc
-        │   ├── info.hh
-        │   ├── progress_bar.cc
-        │   ├── progress_bar.hh
-        │   ├── progress_calculator.cc
-        │   ├── progress_calculator.hh
-        │   └── test
-        │       ├── CMakeLists.txt
-        │       ├── tstcolor.cc
-        │       ├── tstinfo.cc
-        │       ├── tstprogress_bar.cc
-        │       └── tstprogress_calculator.cc
-        └── test
-            ├── CMakeLists.txt
-            ├── tstDemo.cc
-            └── tstDemo.f90
+      .
+      ├── CMakeLists.txt
+      ├── LICENSE
+      ├── PackagesList.cmake
+      ├── ProjectName.cmake
+      ├── README.rst
+      ├── TPLsList.cmake
+      ├── Version.cmake
+      ├── cmake
+      │   └── BOTG_INCLUDE.cmake
+      ├── external
+      │   ├── BootsOnTheGround.in
+      │   └── Testing123.in
+      └── src
+          ├── CMakeLists.txt
+          ├── cmake
+          │   └── Dependencies.cmake
+          ├── spdlog
+          │   ├── progress_logger.hh
+          │   ├── progress_logger.i.hh
+          │   ├── sinks
+          │   │   ├── progress_sink.cc
+          │   │   ├── progress_sink.hh
+          │   │   └── progress_sink.i.hh
+          │   └── test
+          │       ├── CMakeLists.txt
+          │       └── tstprogress_logger.cc
+          └── term
+              ├── color.cc
+              ├── color.hh
+              ├── info.cc
+              ├── info.hh
+              ├── progress_bar.cc
+              ├── progress_bar.hh
+              ├── progress_calculator.cc
+              ├── progress_calculator.hh
+              └── test
+                  ├── CMakeLists.txt
+                  ├── tstcolor.cc
+                  ├── tstinfo.cc
+                  ├── tstprogress_bar.cc
+                  └── tstprogress_calculator.cc
+
 
 
 cmake/BOTG_INCLUDE.cmake
