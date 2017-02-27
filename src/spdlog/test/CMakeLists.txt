@@ -7,4 +7,4 @@
 ##.. code-block:: cmake
 ##
 
-ADD_CXX_TEST( tstprogress_logger.cc )
+T123_AddCxxTest( tstprogress_logger.cc )
