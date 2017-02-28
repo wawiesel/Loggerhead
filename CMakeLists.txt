@@ -8,16 +8,16 @@
 ##
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0 FATAL_ERROR)
 
-# This sets BOTG_SOURCE_DIR which may be used later.
+# This sets BOTG_ROOT_DIR which may be used later.
 INCLUDE( "${CMAKE_SOURCE_DIR}/cmake/BOTG_INCLUDE.cmake" )
 
 # Download external projects.
-BOTG_DownloadExternalProjects(
+botgDownloadExternalProjects(
     external/Testing123.in
 )
 
 # Configure the project.
-BOTG_ConfigureProject( "${CMAKE_SOURCE_DIR}" )
+botgConfigureProject( "${CMAKE_SOURCE_DIR}" )
 TRIBITS_PROJECT_ENABLE_ALL()
 
 # Final print of all the variables for inspection.

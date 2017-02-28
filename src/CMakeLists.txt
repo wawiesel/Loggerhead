@@ -12,8 +12,8 @@
 #Do this at the beginning of a package.
 TRIBITS_PACKAGE( Loggerhead )
 
-BOTG_UseCxxStandard( 11 )
-BOTG_AddCompilerFlags( CXX ANY Linux
+botgUseCxxStandard( 11 )
+botgAddCompilerFlags( CXX ANY Linux
     "-pthread"
 )
 
