@@ -7,7 +7,7 @@
 ##.. code-block:: cmake
 ##
 
-t123AddCxxTest( tstprogress_calculator.cc )
-t123AddCxxTest( tstprogress_bar.cc )
-t123AddCxxTest( tstcolor.cc )
-t123AddCxxTest( tstinfo.cc )
+t123AddTest( tstprogress_calculator.cc )
+t123AddTest( tstprogress_bar.cc )
+t123AddTest( tstcolor.cc )
+t123AddTest( tstinfo.cc )
