@@ -13,9 +13,7 @@
 TRIBITS_PACKAGE( Loggerhead )
 
 botgUseCxxStandard( 11 )
-botgAddCompilerFlags( CXX ANY Linux
-    "-pthread"
-)
+botgProcessTPLS()
 
 TRIBITS_ADD_LIBRARY( Loggerhead
   SOURCES
