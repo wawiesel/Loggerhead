@@ -1,11 +1,7 @@
-##
-##
-##PackagesList.cmake
-##------------------------------------------------------------------------------
-##Declare the **project** name to be something different
-##than the **package** name! I prefix it with ``project-``.
-##
-##.. code-block:: cmake
-##
+#
+# Boilerplate main ProjectName.cmake file for BootsOnTheGround PROJECT.
+# (Suggestion: USE ALL CAPS with different name than main Package.)
+#
+SET(PROJECT_NAME LOGGERHEAD)
 
-SET(PROJECT_NAME project-Loggerhead)
+
