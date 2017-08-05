@@ -19,22 +19,22 @@ whistle classes.
   - single thread `spdlog::progress_logger_mt` or
   - multi thread `spdlog::progress_logger_st`
 
-.. code_block: c++
+.. code-block:: c++
 
     #include "spdlog/progress_logger.hh"
 
     int main()
     {
-        //create a multi-threaded progress logger
+        //create a multi-threaded progress logger with six tasks
         size_t n = 6;
         auto progress = spdlog::progress_logger_mt("demo",n);
 
         for(auto i=1; i<=n; ++i)
         {
-            //simulate 100 ms
+            //simulate 100 ms task
             std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 
-            //output [info] information about the task
+            //output [info] information about the task using normal SPDLOG methods
             progress->info( "Completed task {}",i );
         }
 
@@ -42,6 +42,8 @@ whistle classes.
         std::cerr << "\n";
 
     }
+
+.. image:: doc/img/example_screen_output.gif
 
 .. _CMake: https://cmake.org/
 .. _SPDLOG: https://github.com/gabime/spdlog
