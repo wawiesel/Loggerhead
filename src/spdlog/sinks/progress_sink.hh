@@ -25,13 +25,15 @@ class progress_sink : public stderr_sink<Mutex>,
     void flush() override;
     bool is_tty() const;
 
-    void autoupdate();  // completes one task every time or pass through
+    void update( int dtasks );
+
     void set_allow_autoupdate( bool allow );
     bool allow_autoupdate() const;
 
     progress_sink();
 
   protected:
+    void autoupdate();  // completes one task every time or pass through
     bool b_allow_autoupdate{false};
 
 };  // end class progress_sink

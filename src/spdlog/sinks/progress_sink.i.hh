@@ -43,6 +43,17 @@ bool progress_sink<Mutex>::allow_autoupdate() const
 }
 
 template <class Mutex>
+void progress_sink<Mutex>::update( int dtasks )
+{
+    term::progress_calculator::update( dtasks );
+
+    if( bar.width()>0 )std::cerr << "\r" << std::string(bar.width(),' ');
+    std::cerr << "\r";
+
+    bar.output( this->fraction_completed(), this->elapsed_seconds(), this->remaining_seconds() );
+    flush();
+}
+template <class Mutex>
 std::shared_ptr<progress_sink<Mutex>> progress_sink<Mutex>::instance(int total_tasks)
 {
     auto sink = instance();
