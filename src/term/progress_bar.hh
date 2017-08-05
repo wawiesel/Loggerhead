@@ -74,7 +74,6 @@ class progress_bar
     static std::string bar_text( int, char );
 
   private:
-    std::ostream* b_os;
     ::term::info b_info;
     char b_empty_char;
     int b_empty_color;

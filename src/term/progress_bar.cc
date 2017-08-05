@@ -5,7 +5,7 @@
 
 namespace term
 {
-progress_bar::progress_bar( std::ostream& os ) : b_info( os ) { reset( os ); }
+progress_bar::progress_bar( std::ostream& os ) { reset( os ); }
 namespace detail
 {
 namespace
@@ -22,7 +22,6 @@ void bound( T low, T& value, T high )
 
 void progress_bar::reset( std::ostream& os )
 {
-    b_os = &os;
     b_info = ::term::info( os );
     b_empty_char = ' ';
     b_empty_color = BLUE;
@@ -38,7 +37,7 @@ void progress_bar::reset( std::ostream& os )
 
 std::ostream& progress_bar::os()
 {
-    return *b_os;
+    return b_info.os();
 }
 
 progress_bar& progress_bar::set_colorize( color::Enum e )
