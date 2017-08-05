@@ -2,6 +2,7 @@
 #define Loggerhead_term_info_HH
 
 #include <ostream>
+#include <functional> /*reference_wrapper*/
 
 namespace term
 {
@@ -15,7 +16,7 @@ class info
     std::ostream& os();
 
   private:
-    std::ostream* b_os;
+    std::reference_wrapper<std::ostream> b_os;
     bool b_is_tty;
     int b_columns;
     int b_rows;

@@ -58,12 +58,12 @@ void getSizes( std::ostream& os, int* columns, int* rows )
 }  // detail
 
 info::info( std::ostream& os )
-    : b_os( &os ), b_is_tty( false ), b_columns( 0 ), b_rows( 0 )
+    : b_os( os ), b_is_tty( false ), b_columns( 0 ), b_rows( 0 )
 {
-    detail::getValid( *b_os, &b_is_tty );
+    detail::getValid( b_os, &b_is_tty );
     if( b_is_tty )
     {
-        detail::getSizes( *b_os, &b_columns, &b_rows );
+        detail::getSizes( b_os, &b_columns, &b_rows );
     }
 }
 
@@ -72,7 +72,6 @@ int info::columns() const { return b_columns; }
 int info::rows() const { return b_rows; }
 std::ostream& info::os()
 {
-    assert( b_os != nullptr );
-    return *b_os;
+    return b_os;
 }
 }

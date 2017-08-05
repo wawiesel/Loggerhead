@@ -20,7 +20,7 @@ TEST( progress_logger, Basic ) {
         sink->reset(n);
         //do not update every time a progress->info,warn,etc. is called
         sink->set_allow_autoupdate(false);
-        //try to get a bar 20%,40%,60% of total length
+        //try to get a bar 20%,40%,60% of total screen width
         sink->bar.set_bar_width_fraction(0.2*j);
         for( size_t i=1; i<=n; ++i)
         {
