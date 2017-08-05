@@ -42,31 +42,12 @@ void progress_calculator::reset( int total_tasks )
     b_is_finished = false;
     b_start = std::chrono::system_clock::now();
     b_final_elapsed = 0.0;
-    b_allow_autoupdate = false;
 }
 
 void progress_calculator::set_total_tasks( int total_tasks )
 {
     b_total_tasks = total_tasks;
     if( b_completed_tasks >= b_total_tasks ) finish();
-}
-
-void progress_calculator::autoupdate()
-{
-    if( b_allow_autoupdate )
-    {
-        update( -1 );
-    }
-}
-
-void progress_calculator::set_allow_autoupdate( bool allow )
-{
-    b_allow_autoupdate = allow;
-}
-
-bool progress_calculator::allow_autoupdate() const
-{
-    return b_allow_autoupdate;
 }
 
 double progress_calculator::elapsed_seconds() const

@@ -22,6 +22,27 @@ std::shared_ptr<progress_sink<Mutex>> progress_sink<Mutex>::instance()
 }
 
 template <class Mutex>
+void progress_sink<Mutex>::autoupdate()
+{
+    if( b_allow_autoupdate )
+    {
+        update( -1 );
+    }
+}
+
+template <class Mutex>
+void progress_sink<Mutex>::set_allow_autoupdate( bool allow )
+{
+    b_allow_autoupdate = allow;
+}
+
+template <class Mutex>
+bool progress_sink<Mutex>::allow_autoupdate() const
+{
+    return b_allow_autoupdate;
+}
+
+template <class Mutex>
 std::shared_ptr<progress_sink<Mutex>> progress_sink<Mutex>::instance(int total_tasks)
 {
     auto sink = instance();

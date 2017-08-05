@@ -17,10 +17,6 @@ class progress_calculator
     void finish();
     bool is_finished() const;
 
-    void autoupdate();  // completes one task every time
-    void set_allow_autoupdate( bool allow );
-    bool allow_autoupdate() const;
-
     double elapsed_seconds() const;
     double remaining_seconds() const;
 
@@ -37,7 +33,6 @@ class progress_calculator
     bool b_is_finished;
     std::chrono::time_point<std::chrono::system_clock> b_start;
     double b_final_elapsed;
-    bool b_allow_autoupdate;
 
 };  // end class calculator
 

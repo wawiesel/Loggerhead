@@ -17,7 +17,6 @@ TEST( progress_calculator, Initialization )
     EXPECT_FALSE( pc.is_finished() );
     EXPECT_LT( 0., pc.elapsed_seconds() );
     EXPECT_EQ( 0., pc.fraction_completed() );
-    EXPECT_FALSE( pc.allow_autoupdate() );
 }
 
 TEST( progress_calculator, Update )

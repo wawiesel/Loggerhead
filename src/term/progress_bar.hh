@@ -9,7 +9,14 @@ namespace term
 class progress_bar
 {
   public:
+    // ctor/dtor
     progress_bar( std::ostream& os );
+    virtual ~progress_bar(){}
+
+    // terminal info
+    const ::term::info& info() const;
+
+    // current output stream
     std::ostream& os();
 
     // change output stream
@@ -61,9 +68,6 @@ class progress_bar
 
     progress_bar& set_bar_width_fraction( double );
     double bar_width_fraction() const;
-
-    // get terminal info
-    const ::term::info& info() const;
 
   protected:
     // formatters used internally

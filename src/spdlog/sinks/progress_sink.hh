@@ -24,7 +24,15 @@ class progress_sink : public stderr_sink<Mutex>,
     void _sink_it( const details::log_msg& msg ) override;
     void flush() override;
     bool is_tty() const;
+
+    void autoupdate();  // completes one task every time or pass through
+    void set_allow_autoupdate( bool allow );
+    bool allow_autoupdate() const;
+
     progress_sink();
+
+  protected:
+    bool b_allow_autoupdate{false};
 
 };  // end class progress_sink
 

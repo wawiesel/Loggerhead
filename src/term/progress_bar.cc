@@ -5,7 +5,7 @@
 
 namespace term
 {
-progress_bar::progress_bar( std::ostream& os ) { reset( os ); }
+progress_bar::progress_bar( std::ostream& os ) : b_info( os ) { reset( os ); }
 namespace detail
 {
 namespace
