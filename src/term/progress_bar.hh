@@ -62,9 +62,10 @@ class progress_bar
     progress_bar& set_bar_width_fraction( double );
     double bar_width_fraction() const;
 
-    //
+    // get terminal info
     const ::term::info& info() const;
 
+  protected:
     // formatters used internally
     static std::string percentage_text( double progress_fraction );
     static std::string elapsed_text( double elapsed_seconds );
