@@ -55,11 +55,13 @@ Demo 1
 
     }
 
-.. image:: doc/img/demo1.gif
+.. image:: doc/img/demo.gif
 
 
 Demo 2
 ------
+
+.. code-block:: c++
 
     #include "spdlog/progress_logger.hh"
 
