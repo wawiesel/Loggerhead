@@ -10,17 +10,22 @@ whistle classes.
 
 - terminal stuff
 
-  - information (screen width, is a TTY) with `term::terminal_info`
-  - coloring  with `term::color`
-  - ASCII (with color!) progress bar with `term::progress_bar`
+  - ``term::terminal_info``: get information like screen width, whether the ``ostream`` is a TTY, whether it supports color
+  - ``term::color``: inject foreground and background color int terminal output
+  - ``term::progress_bar``: a configurable ASCII progress bar (with color!) 
 
 - SPDLOG_ logging with a progress bar
 
-  - single thread `spdlog::progress_logger_mt` or
-  - multi thread `spdlog::progress_logger_st`
+  - single thread ``spdlog::progress_logger_mt`` or
+  - multi thread ``spdlog::progress_logger_st``
 
 Demo 1
 ------
+
+One of the cool things about the SPDLOG_ ``progress_logger`` is with
+each call to one of the logging functions (``warn``, ``info``, ``error``, etc.),
+the remaining tasks are automatically decremented by one. So you can
+give an informative message to trigger a progress bar update.
 
 .. code-block:: c++
 
@@ -60,6 +65,11 @@ Demo 1
 
 Demo 2
 ------
+
+Alternatively, if you want a little more control, you need to get the
+corresponding ``sink`` for the progress bar. With the ``sink`` you
+can turn off the auto update, then you need to call ``sink->update``
+yourself.
 
 .. code-block:: c++
 
