@@ -14,6 +14,7 @@ TEST( info, Basic )
     EXPECT_LE( 0, i.columns() );
     EXPECT_LE( 0, i.rows() );
     bool is = i.is_tty();
+    (void)is; //to silence usage warning
     auto& os = i.os();
 }
 

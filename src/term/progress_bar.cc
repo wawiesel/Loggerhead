@@ -150,7 +150,6 @@ void progress_bar::output( double progress_fraction,
             over_length = total_length - b_width;
             if( over_length > 0 )
             {
-                total_length -= ela_text.length();
                 ela_text = "";
             }
         }
