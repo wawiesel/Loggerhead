@@ -1,5 +1,12 @@
-#include "spdlog/details/spdlog_impl.h"
+#include "spdlog/spdlog.h"
 #include "spdlog/sinks/progress_sink.hh"
+
+#ifdef _WIN32
+#include "spdlog/sinks/wincolor_sink.h"
+#else
+#include "spdlog/sinks/ansicolor_sink.h"
+#endif
+
 
 namespace spdlog
 {
@@ -14,8 +21,18 @@ std::shared_ptr<spdlog::logger> progress_logger( const std::string& logger_name,
 {
     bool is = s->is_tty();
     if( color ) color = is;
-    auto x = create_console_logger( logger_name, s, color );
-    return x;
+    if( color )
+    {
+		std::vector<spdlog::sink_ptr> sinks;
+#ifdef _WIN32
+		auto color_sink = std::make_shared<spdlog::sinks::wincolor_sink>(s);
+#else
+		auto color_sink = std::make_shared<spdlog::sinks::ansicolor_sink>(s);
+#endif
+		sinks.push_back(color_sink);
+		return create(logger_name, begin(sinks), end(sinks));
+    }
+    return spdlog::create( logger_name, s );
 }
 
 }  // anon

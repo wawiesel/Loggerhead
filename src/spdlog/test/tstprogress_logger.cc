@@ -39,4 +39,33 @@ TEST( progress_logger, Basic ) {
     //--------------------------------------------------------------------------
 }
 
+void sleep_ms( int ms )
+{
+    std::this_thread::sleep_for( std::chrono::milliseconds( ms ) );
+}
+
+TEST( progress_logger, Extra )
+{
+
+    //create a multi-threaded progress logger
+    size_t n = 8;
+    auto progress = progress_logger_mt("extra",n);
+
+    //do a calculation loop
+    progress->warn( "Entering a calculation!" );
+    for(auto i=1; i<=n-2; ++i)
+    {
+        sleep_ms( 500 );
+        progress->info( "Completed task {}",i );
+
+        //throw an error at task3
+        if( i==3 )progress->error("YOU FAIL!");
+    }
+    sleep_ms( 1000 );
+    progress->warn( "Whew! Calculation is over." );
+
+    //go to next line
+    std::cerr << "\n";
+}
+
 }//spdlog
